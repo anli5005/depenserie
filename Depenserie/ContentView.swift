@@ -8,14 +8,25 @@
 import SwiftUI
 
 struct ContentView: View {
+    @Environment(Register.self) var register
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationStack {
+            List {
+                ForEach(register[Account.self]) { account in
+                    Text(account.name)
+                }
+            }
+            .navigationTitle("Accounts")
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button("Add", systemImage: "plus") {
+                        let id = UUID()
+                        register.upsert(record: Account(id: id, name: "Account \(id.uuidString)"))
+                    }
+                }
+            }
         }
-        .padding()
     }
 }
 
